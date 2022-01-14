@@ -1,14 +1,39 @@
-R, G, B = 0, 1, 2
-
-RGB = (R, G, B)
+RGB = (0, 1, 2)
 
 
-def xcoord(i, start, every_px, image_width):
+def _xcoord(i, start, every_px, image_width):
     return ((i * every_px) + start + every_px) % (image_width)
 
 
-def ycoord(i, start, every_px, image_width):
+def _ycoord(i, start, every_px, image_width):
     return int(((i - start) * every_px + i) / image_width)
+
+
+def _coords(i, start, every_px, image_width):
+    x0 = _xcoord(i, start, every_px, image_width)
+    x1 = (x0 + 1) % image_width
+    x2 = (x1 + 1) % image_width
+    y0 = _ycoord(i, start, every_px, image_width)
+    # Do we need to bump to the next row of the image?
+    y1 = y0 + 1 if x1 < x0 else y0
+    y2 = y1 + 1 if x2 < x1 else y1
+
+    return (x0, y0), (x1, y1), (x2, y2)
+
+
+def _encode_digit_in_channel_val(digit, original_channel_val):
+    channel_digits = [char for char in str(original_channel_val).zfill(3)]
+    channel_digits[-1] = str(digit)
+    channel_val = int(''.join(channel_digits))
+
+    if channel_val > 255:
+        channel_val -= 10
+
+    return channel_val
+
+
+def _decode_digit_from_channel_val(channel_val):
+    return channel_val % 10
 
 
 def encode(image, msg, start, every_px):
@@ -20,33 +45,17 @@ def encode(image, msg, start, every_px):
 
     stop = 0
     for i, val in enumerate(byte_vals, start=start):
-        x = xcoord(i, start, every_px, image.width)
-        y = ycoord(i, start, every_px, image.width)
+        coords = _coords(i, start, every_px, image.width)
+        pixels = [pxa[x, y] for x, y in coords]
+        digits = [d for d in str(val).zfill(3)]
 
         rgb_ind = i % len(RGB)
-        px = pxa[x, y]
-        r, g, b = px
 
-        new_r = val if rgb_ind == R else r
-        new_g = val if rgb_ind == G else g
-        new_b = val if rgb_ind == B else b
-
-        new_px = [int(v) for v in [new_r, new_g, new_b]]
-
-        intensity = sum(px)
-        new_intensity = sum(new_px)
-
-        # A little extra obfuscation to keep the pixel intensity (brightness) the similar.
-        diff = new_intensity - intensity
-        # Close enough, don't care about losing a single intensity val for odd remaining
-        channel_change = int(diff / 2)
-
-        for j in range(len(RGB)):
-            if j != rgb_ind:
-                new_px[j] = new_px[j] - channel_change
-
-        new_px = tuple(new_px)
-        pxa[x, y] = new_px
+        for digit, pixel, pixel_coords in zip(digits, pixels, coords):
+            new_channel_val = _encode_digit_in_channel_val(digit, pixel[rgb_ind])
+            new_pixel = list(pixel)
+            new_pixel[rgb_ind] = new_channel_val
+            pxa[pixel_coords[0], pixel_coords[1]] = tuple(new_pixel)
 
         stop = i
 
@@ -59,12 +68,10 @@ def decode(image, start, every_px, msg_len):
 
     for i in range(msg_len + 1):
         ind = start + i
-        x = xcoord(ind, start, every_px, image.width)
-        y = ycoord(ind, start, every_px, image.width)
-
-        px = pxa[x, y]
+        coords = _coords(ind, start, every_px, image.width)
         rgb_ind = ind % len(RGB)
-        byte_val = px[rgb_ind]
+        digits = [str(_decode_digit_from_channel_val(pxa[x, y][rgb_ind])) for x, y in coords]
+        byte_val = int(''.join(digits))
         byte_vals.append(byte_val)
 
     bytes = bytearray(byte_vals)
