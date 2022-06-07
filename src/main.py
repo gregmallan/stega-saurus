@@ -12,7 +12,7 @@ TEST_IMG = 'skydome.jpg'
 
 OUT_DIR = Path('/tmp', 'stega', 'out')
 
-TEST_MSG = "Master of puppets, he's pulling your strings, twisting your mind and smashing your dreams. Test ûñįçœdë characters"
+TEST_MSG = "And if you don't love me now\nYou will never love me again\nI can still hear you saying\nYou would never break the chain (Never break the chain).\n\nTest ûñįçœdë characters"
 
 
 # KEY = 'secret' # TODO: Use key
@@ -33,7 +33,7 @@ def main():
         out_image.show()
         out_image.save(out_path)
         print('DECODING... ')  # TODO: REMOVE - NO COMMIT!!
-        decoded_msg = decode(out_image, start, every_px, msg_len)
+        decoded_msg = decode(out_image, msg_len, start, every_px)
         print(decoded_msg)  # TODO: REMOVE - NO COMMIT!!
         assert TEST_MSG == decoded_msg
 

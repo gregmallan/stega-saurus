@@ -1,5 +1,8 @@
 RGB = (0, 1, 2)
 
+DEFAULT_START = 0
+DEFAULT_EVERY_PX = 1
+
 
 def _px_num(i, start, every_px, channel_index):
     return (start + i * every_px) + channel_index
@@ -36,7 +39,7 @@ def _decode_digit_from_channel_val(channel_val):
     return channel_val % 10
 
 
-def encode(image, msg, start, every_px):
+def encode(image, msg, start=DEFAULT_START, every_px=DEFAULT_EVERY_PX):
     pxa = image.load()
     msg_bytes = msg.encode()
     byte_vals = [b for b in msg_bytes]
@@ -61,7 +64,7 @@ def encode(image, msg, start, every_px):
     return msg_len
 
 
-def decode(image, start, every_px, msg_len):
+def decode(image, msg_len, start=DEFAULT_START, every_px=DEFAULT_EVERY_PX):
     byte_vals = []
     pxa = image.load()
 
