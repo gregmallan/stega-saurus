@@ -12,7 +12,8 @@ TEST_IMG = 'skydome.jpg'
 
 OUT_DIR = Path('/tmp', 'stega', 'out')
 
-TEST_MSG = "Master of puppets, he's pulling your strings, twisting your mind and smashing your dreams"
+TEST_MSG = "Master of puppets, he's pulling your strings, twisting your mind and smashing your dreams. Test ûñįçœdë characters"
+
 
 # KEY = 'secret' # TODO: Use key
 
@@ -21,6 +22,7 @@ def main():
     in_img_path = Path.cwd().parent.joinpath('tests', 'integration', '.fixtures', 'img', TEST_IMG)
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     out_path = OUT_DIR.joinpath(f'out-{TEST_IMG}')
+    # TODO: check if outpath exists
 
     with Image.open(in_img_path) as out_image:
         start = out_image.width * 3 - 1  # TODO: Don't use this as the start, take from key.

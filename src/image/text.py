@@ -1,12 +1,16 @@
 RGB = (0, 1, 2)
 
 
+def _px_num(i, start, every_px):
+    return (start + i * every_px)
+
+
 def _xcoord(i, start, every_px, image_width):
-    return ((i * every_px) + start + every_px) % (image_width)
+    return _px_num(i, start, every_px) % (image_width)
 
 
 def _ycoord(i, start, every_px, image_width):
-    return int(((i - start) * every_px + i) / image_width)
+    return int(_px_num(i, start, every_px) / (image_width))
 
 
 def _coords(i, start, every_px, image_width):
@@ -43,8 +47,7 @@ def encode(image, msg, start, every_px):
 
     # TODO: CHECK image dims vs msg length and needed encoding size
 
-    stop = 0
-    for i, val in enumerate(byte_vals, start=start):
+    for i, val in enumerate(byte_vals):
         coords = _coords(i, start, every_px, image.width)
         pixels = [pxa[x, y] for x, y in coords]
         digits = [d for d in str(val).zfill(3)]
@@ -57,19 +60,18 @@ def encode(image, msg, start, every_px):
             new_pixel[rgb_ind] = new_channel_val
             pxa[pixel_coords[0], pixel_coords[1]] = tuple(new_pixel)
 
-        stop = i
+    msg_len = len(byte_vals)
 
-    return stop - start
+    return msg_len
 
 
 def decode(image, start, every_px, msg_len):
     byte_vals = []
     pxa = image.load()
 
-    for i in range(msg_len + 1):
-        ind = start + i
-        coords = _coords(ind, start, every_px, image.width)
-        rgb_ind = ind % len(RGB)
+    for i in range(msg_len):
+        coords = _coords(i, start, every_px, image.width)
+        rgb_ind = i % len(RGB)
         digits = [str(_decode_digit_from_channel_val(pxa[x, y][rgb_ind])) for x, y in coords]
         byte_val = int(''.join(digits))
         byte_vals.append(byte_val)
