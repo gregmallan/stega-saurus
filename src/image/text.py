@@ -1,28 +1,24 @@
 RGB = (0, 1, 2)
 
 
-def _px_num(i, start, every_px):
-    return (start + i * every_px)
+def _px_num(i, start, every_px, channel_index):
+    return (start + i * every_px) + channel_index
 
 
-def _xcoord(i, start, every_px, image_width):
-    return _px_num(i, start, every_px) % (image_width)
+def _xcoord(i, start, every_px, channel_index, image_width):
+    return _px_num(i, start, every_px, channel_index) % (image_width)
 
 
-def _ycoord(i, start, every_px, image_width):
-    return int(_px_num(i, start, every_px) / (image_width))
+def _ycoord(i, start, every_px, channel_index, image_width):
+    return int(_px_num(i, start, every_px, channel_index) / (image_width))
 
 
 def _coords(i, start, every_px, image_width):
-    x0 = _xcoord(i, start, every_px, image_width)
-    x1 = (x0 + 1) % image_width
-    x2 = (x1 + 1) % image_width
-    y0 = _ycoord(i, start, every_px, image_width)
-    # Do we need to bump to the next row of the image?
-    y1 = y0 + 1 if x1 < x0 else y0
-    y2 = y1 + 1 if x2 < x1 else y1
-
-    return (x0, y0), (x1, y1), (x2, y2)
+    # return (x0, y0), (x1, y1), (x2, y2)
+    return tuple([
+        (_xcoord(i, start, every_px, channel_ind, image_width), _ycoord(i, start, every_px, channel_ind, image_width))
+        for channel_ind in RGB
+    ])
 
 
 def _encode_digit_in_channel_val(digit, original_channel_val):
