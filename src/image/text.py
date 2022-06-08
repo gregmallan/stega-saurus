@@ -4,6 +4,7 @@ RGB = (0, 1, 2)
 
 DEFAULT_START = 0
 DEFAULT_EVERY_PX = 1
+STARTING_LEN_KEY_CHAR = 'a'
 
 
 def _px_num(i: int, start: int, every_px: int, channel_index: int) -> int:
@@ -43,20 +44,13 @@ def _decode_digit_from_channel_val(channel_val: int) -> int:
 
 def _msg_len_to_str(msg_len: int) -> str:
     len_str = str(msg_len)
-    out_chars = []
-    for digit_chars in len_str:
-        out_chars.append(chr(int(digit_chars) + ord('a')))
-
+    out_chars = [chr(int(digit_char) + ord(STARTING_LEN_KEY_CHAR)) for digit_char in len_str]
     return ''.join(out_chars)
 
 
 def _str_to_msg_len(encoded_len: str) -> int:
-    len_digit_chrs = []
-    for char in encoded_len:
-        digit_char = str(ord(char) - ord('a'))
-        len_digit_chrs.append(digit_char)
-
-    return int(''.join(len_digit_chrs))
+    len_digit_chars = ''.join([str(ord(char) - ord(STARTING_LEN_KEY_CHAR)) for char in encoded_len])
+    return int(''.join(len_digit_chars))
 
 
 def encode(image: Image, msg: str, start: int = DEFAULT_START, every_px: int = DEFAULT_EVERY_PX) -> str:
