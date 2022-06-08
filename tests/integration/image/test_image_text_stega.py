@@ -19,8 +19,8 @@ def original_msg(request):
 
 
 def test_encode_decode_default_start_every_px(original_image, original_msg):
-    msg_len = encode(original_image, original_msg)
-    msg = decode(original_image, msg_len)
+    encoded_msg_len_str = encode(original_image, original_msg)
+    msg = decode(original_image, encoded_msg_len_str)
     assert msg == original_msg
 
 
@@ -28,15 +28,15 @@ def test_encode_decode_default_start_every_px(original_image, original_msg):
     0, 1, 2, 100, 101, IMAGE_MAX_X - 1, IMAGE_MAX_X, IMAGE_MAX_X + 1, IMAGE_MAX_X * 2, IMAGE_MAX_X * 100
 ])
 def test_encode_decode_default_every_px(original_image, original_msg, start):
-    msg_len = encode(original_image, original_msg, start=start)
-    msg = decode(original_image, msg_len, start=start)
+    encoded_msg_len_str = encode(original_image, original_msg, start=start)
+    msg = decode(original_image, encoded_msg_len_str, start=start)
     assert msg == original_msg
 
 
 @pytest.mark.parametrize('every_px', [1, 2, 100, 101, 1000, 1001])
 def test_encode_decode_default_start(original_image, original_msg, every_px):
-    msg_len = encode(original_image, original_msg, every_px=every_px)
-    msg = decode(original_image, msg_len, every_px=every_px)
+    encoded_msg_len_str = encode(original_image, original_msg, every_px=every_px)
+    msg = decode(original_image, encoded_msg_len_str, every_px=every_px)
     assert msg == original_msg
 
 
@@ -45,6 +45,6 @@ def test_encode_decode_default_start(original_image, original_msg, every_px):
 ])
 @pytest.mark.parametrize('every_px', [1, 2, 100, 101, 1000, 1001])
 def test_encode_decode(original_image, original_msg, start, every_px):
-    msg_len = encode(original_image, original_msg, start=start, every_px=every_px)
-    msg = decode(original_image, msg_len, start=start, every_px=every_px)
+    encoded_msg_len_str = encode(original_image, original_msg, start=start, every_px=every_px)
+    msg = decode(original_image, encoded_msg_len_str, start=start, every_px=every_px)
     assert msg == original_msg

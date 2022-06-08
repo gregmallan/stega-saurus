@@ -15,9 +15,6 @@ OUT_DIR = Path('/tmp', 'stega', 'out')
 TEST_MSG = "And if you don't love me now\nYou will never love me again\nI can still hear you saying\nYou would never break the chain (Never break the chain).\n\nTest ûñįçœdë characters"
 
 
-# KEY = 'secret' # TODO: Use key
-
-
 def main():
     in_img_path = Path.cwd().parent.joinpath('tests', 'integration', '.fixtures', 'img', TEST_IMG)
     OUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -29,11 +26,11 @@ def main():
         every_px = EVERY_PX
         print('ENCODING...')  # TODO: REMOVE - NO COMMIT!!
         print(TEST_MSG)  # TODO: REMOVE - NO COMMIT!!
-        msg_len = encode(out_image, TEST_MSG, start, every_px)
+        encoded_msg_len_str = encode(out_image, TEST_MSG, start=start, every_px=every_px)
         out_image.show()
         out_image.save(out_path)
         print('DECODING... ')  # TODO: REMOVE - NO COMMIT!!
-        decoded_msg = decode(out_image, msg_len, start, every_px)
+        decoded_msg = decode(out_image, encoded_msg_len_str, start=start, every_px=every_px)
         print(decoded_msg)  # TODO: REMOVE - NO COMMIT!!
         assert TEST_MSG == decoded_msg
 
