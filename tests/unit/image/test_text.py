@@ -97,7 +97,7 @@ from src.image.text import _decode_digit_from_channel_val, _encode_digit_in_chan
 
 ])
 def test_encode_digit_in_channel_val(digit, orig_channel_val, expected_channel_val):
-    result = _encode_digit_in_channel_val(digit, orig_channel_val)
+    result = _encode_digit_in_channel_val(str(digit), orig_channel_val)
     assert result == expected_channel_val
 
 

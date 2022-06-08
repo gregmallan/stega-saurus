@@ -27,9 +27,9 @@ def _coords(i: int, start: int, every_px: int, image_width: int) -> tuple:
     ])
 
 
-def _encode_digit_in_channel_val(digit: int, original_channel_val: int) -> int:
+def _encode_digit_in_channel_val(digit: str, original_channel_val: int) -> int:
     channel_digits = [char for char in str(original_channel_val).zfill(3)]
-    channel_digits[-1] = str(digit)
+    channel_digits[-1] = digit
     channel_val = int(''.join(channel_digits))
 
     if channel_val > 255:
