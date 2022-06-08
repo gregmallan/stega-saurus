@@ -1,22 +1,24 @@
+from PIL import Image
+
 RGB = (0, 1, 2)
 
 DEFAULT_START = 0
 DEFAULT_EVERY_PX = 1
 
 
-def _px_num(i, start, every_px, channel_index):
+def _px_num(i: int, start: int, every_px: int, channel_index: int) -> int:
     return (start + i * every_px) + channel_index
 
 
-def _xcoord(i, start, every_px, channel_index, image_width):
+def _xcoord(i: int, start: int, every_px: int, channel_index: int, image_width: int) -> int:
     return _px_num(i, start, every_px, channel_index) % (image_width)
 
 
-def _ycoord(i, start, every_px, channel_index, image_width):
+def _ycoord(i: int, start: int, every_px: int, channel_index: int, image_width: int) -> int:
     return int(_px_num(i, start, every_px, channel_index) / (image_width))
 
 
-def _coords(i, start, every_px, image_width):
+def _coords(i: int, start: int, every_px: int, image_width: int) -> tuple:
     # return (x0, y0), (x1, y1), (x2, y2)
     return tuple([
         (_xcoord(i, start, every_px, channel_ind, image_width), _ycoord(i, start, every_px, channel_ind, image_width))
@@ -24,7 +26,7 @@ def _coords(i, start, every_px, image_width):
     ])
 
 
-def _encode_digit_in_channel_val(digit, original_channel_val):
+def _encode_digit_in_channel_val(digit: int, original_channel_val: int) -> int:
     channel_digits = [char for char in str(original_channel_val).zfill(3)]
     channel_digits[-1] = str(digit)
     channel_val = int(''.join(channel_digits))
@@ -35,11 +37,11 @@ def _encode_digit_in_channel_val(digit, original_channel_val):
     return channel_val
 
 
-def _decode_digit_from_channel_val(channel_val):
+def _decode_digit_from_channel_val(channel_val: int) -> int:
     return channel_val % 10
 
 
-def _msg_len_to_str(msg_len):
+def _msg_len_to_str(msg_len: int) -> str:
     len_str = str(msg_len)
     out_chars = []
     for digit_chars in len_str:
@@ -48,16 +50,16 @@ def _msg_len_to_str(msg_len):
     return ''.join(out_chars)
 
 
-def _str_to_msg_len(encoded_len_str):
+def _str_to_msg_len(encoded_len: str) -> int:
     len_digit_chrs = []
-    for char in encoded_len_str:
+    for char in encoded_len:
         digit_char = str(ord(char) - ord('a'))
         len_digit_chrs.append(digit_char)
 
     return int(''.join(len_digit_chrs))
 
 
-def encode(image, msg, start=DEFAULT_START, every_px=DEFAULT_EVERY_PX):
+def encode(image: Image, msg: str, start: int = DEFAULT_START, every_px: int = DEFAULT_EVERY_PX) -> str:
     pxa = image.load()
     msg_bytes = msg.encode()
     byte_vals = [b for b in msg_bytes]
@@ -83,7 +85,7 @@ def encode(image, msg, start=DEFAULT_START, every_px=DEFAULT_EVERY_PX):
     return encoded_msg_len_str
 
 
-def decode(image, encoded_msg_len, start=DEFAULT_START, every_px=DEFAULT_EVERY_PX):
+def decode(image: Image, encoded_msg_len: str, start: int = DEFAULT_START, every_px: int = DEFAULT_EVERY_PX) -> str:
     byte_vals = []
     pxa = image.load()
 
