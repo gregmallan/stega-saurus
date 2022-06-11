@@ -1,42 +1,126 @@
 from pathlib import Path
+
 from shutil import copyfile
+from typing import Optional
 
 from PIL import Image
+import typer
 
 from image.text import encode, decode
 
-# TODO: Skipping pixels - take from key
-EVERY_PX = 100
-TEST_IMG_NAME = 'skydome'
-TEST_IMG = f'{TEST_IMG_NAME}.jpg'
+__version__ = '0.0.1a'
 
-OUT_IMG = f'out-{TEST_IMG_NAME}.png'
-
-OUT_DIR = Path('/Users', 'greg', 'Desktop')
-
-TEST_MSG = "And if you don't love me now\nYou will never love me again\nI can still hear you saying\nYou would never break the chain (Never break the chain).\n\nTest ûñįçœdë characters"
+app = typer.Typer()
+state = {"verbose": False}
 
 
-def main():
-    in_img_path = Path.cwd().parent.joinpath('tests', 'integration', '.fixtures', 'img', TEST_IMG)
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
-    out_path = OUT_DIR.joinpath(f'{OUT_IMG}')
+def version_callback(value: bool):
+    if value:
+        typer.echo(f'stega-saurus version: {__version__}')
+        raise typer.Exit()
 
-    with Image.open(in_img_path) as out_image:
-        print('ENCODING...')  # TODO: REMOVE - NO COMMIT!!
-        print(TEST_MSG)  # TODO: REMOVE - NO COMMIT!!
-        encoded_msg_len_str = encode(out_image, TEST_MSG)
-        out_image.show()
+
+def start_callback(value: int):
+    if value < 0:
+        raise typer.BadParameter("Must be greater than 0")
+    return value
+
+
+def every_px_callback(value: int):
+    if value < 1:
+        raise typer.BadParameter("Must be greater than 1")
+    return value
+
+
+@app.callback(help='Stega-saurus image steganography')
+def main(verbose: Optional[bool] = typer.Option(False, '-v', '--verbose'),
+         version: Optional[bool] = typer.Option(None, '--version', callback=version_callback, is_eager=True)):
+    """
+    Main method for image steganography.
+    """
+
+    if verbose:
+        state["verbose"] = True
+        typer.secho(f"verbose flag not supported yet", fg=typer.colors.RED, bold=True)
+        raise typer.Exit(code=1)
+
+
+@app.command(name='encode', help="Encode a message using an image")
+def img_encode(
+    in_image_path: Path = typer.Argument(
+        ...,
+        exists=True,
+        file_okay=True,
+        dir_okay=False,
+        readable=True,
+        resolve_path=True,
+        help="Original image path to use in encoding"),
+    out_image_path: Path = typer.Argument(
+        ...,
+        exists=False,
+        file_okay=True,
+        dir_okay=False,
+        writable=True,
+        readable=True,
+        resolve_path=True,
+        help="Output image path to encode the message into"),
+    msg: str = typer.Argument(..., help="Message to encode in to the image"),
+    # start: Optional[int] = typer.Option(
+    #     0, '--start', '-s', callback=start_callback, help="Start encoding at the nth pixel"),
+    # every_px: Optional[int] = typer.Option(1, '--every-px', '-p', callback=every_px_callback, show_default=False),
+):
+    """
+    Encode a message into a copy of an image.
+    """
+    typer.secho(f"stega-saurus text image steganography encode", fg=typer.colors.MAGENTA, bold=True)
+
+    if in_image_path == out_image_path:
+        typer.secho(
+            f"In and out images paths are the same, this would overwrite the original file",
+            fg=typer.colors.RED,
+            bold=True,
+            err=True
+        )
+        raise typer.Abort()
+
+    typer.echo(typer.style("Encoding...", fg=typer.colors.CYAN, bold=True))
+
+    with Image.open(in_image_path) as out_image:
+        key = encode(out_image, msg)
+        # out_image.show()
+
         # Currently only supporting PNG for output file of encoding
-        out_image.save(out_path, format='png')
+        out_image.save(out_image_path, format='png')
 
-    with Image.open(out_path) as new_out_img:
-        new_out_img.show()  # TODO: REMOVE - NO COMMIT!!
-        print('DECODING... ')  # TODO: REMOVE - NO COMMIT!!
-        decoded_msg = decode(new_out_img, encoded_msg_len_str)
-        print(decoded_msg)  # TODO: REMOVE - NO COMMIT!!
-        assert TEST_MSG == decoded_msg
+        typer.secho("Done encoding", fg=typer.colors.GREEN, bold=True)
+        typer.secho(f"decode key: {key}", fg=typer.colors.CYAN, bold=False)
+
+
+@app.command(name='decode', help="Decode a message from an image")
+def img_decode(
+    in_image_path: Path = typer.Argument(
+        ...,
+        exists=True,
+        file_okay=True,
+        dir_okay=False,
+        readable=True,
+        resolve_path=True,
+        help="Image path with encoded msg"),
+    key: str = typer.Argument(..., help="Image path with encoded msg"),
+):
+    """
+    Decode a message from an image.
+    """
+    typer.secho(f"stega-saurus text image steganography decode", fg=typer.colors.MAGENTA, bold=True)
+    typer.secho("Decoding...", fg=typer.colors.CYAN, bold=True)
+
+    with Image.open(in_image_path) as in_image:
+        msg = decode(in_image, key)
+
+        typer.secho("Done decoding", fg=typer.colors.GREEN, bold=True)
+        typer.secho("Encoded message:", fg=typer.colors.CYAN, bold=True)
+        typer.secho(msg)
 
 
 if __name__ == '__main__':
-    main()
+    app()
