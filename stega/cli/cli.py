@@ -2,16 +2,15 @@ from typing import Optional
 
 import typer
 
-import textimg
-
-__version__ = '0.0.1a'
+from stega import __app_name__, __version__
+from stega.cli import textimg
 
 app = typer.Typer()
 
 
 def version_callback(value: bool):
     if value:
-        typer.echo(f'stega-saurus version: {__version__}')
+        typer.echo(f'{__app_name__} version: {__version__}')
         raise typer.Exit()
 
 
@@ -26,6 +25,3 @@ def main_callback(
 
 
 app.add_typer(textimg.app, name='textimg', callback=main_callback)
-
-if __name__ == '__main__':
-    app()

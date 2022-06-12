@@ -1,6 +1,6 @@
 import pytest
 
-from src.image.text import _decode_digit_from_channel_val, _encode_digit_in_channel_val
+from stega.image.text import _decode_digit_from_channel_val, _encode_digit_in_channel_val
 
 
 @pytest.mark.parametrize('digit,orig_channel_val,expected_channel_val', [

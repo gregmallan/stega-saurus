@@ -4,7 +4,7 @@ from typing import Optional
 from PIL import Image
 import typer
 
-from image.text import encode, decode
+from stega.image.text import encode, decode
 
 app = typer.Typer()
 
