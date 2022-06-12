@@ -33,8 +33,10 @@ def every_px_callback(value: int):
 
 
 @app.callback(help='Stega-saurus image steganography')
-def main(verbose: Optional[bool] = typer.Option(False, '-v', '--verbose'),
-         version: Optional[bool] = typer.Option(None, '--version', callback=version_callback, is_eager=True)):
+def main(
+    verbose: Optional[bool] = typer.Option(False, '-v', '--verbose'),
+    version: Optional[bool] = typer.Option(None, '--version', callback=version_callback, is_eager=True)
+):
     """
     Main method for image steganography.
     """
@@ -45,7 +47,7 @@ def main(verbose: Optional[bool] = typer.Option(False, '-v', '--verbose'),
         raise typer.Exit(code=1)
 
 
-@app.command(name='encode', help="Encode a message using an image")
+@app.command(name='encode', help="Encode a message using an image output as a PNG")
 def img_encode(
     in_image_path: Path = typer.Argument(
         ...,
@@ -54,7 +56,8 @@ def img_encode(
         dir_okay=False,
         readable=True,
         resolve_path=True,
-        help="Original image path to use in encoding"),
+        help="Original image path to use in encoding"
+    ),
     out_image_path: Path = typer.Argument(
         ...,
         exists=False,
@@ -63,11 +66,9 @@ def img_encode(
         writable=True,
         readable=True,
         resolve_path=True,
-        help="Output image path to encode the message into"),
+        help="Output image path to encode the message into (file extension ignored, image will be a png)"
+    ),
     msg: str = typer.Argument(..., help="Message to encode in to the image"),
-    # start: Optional[int] = typer.Option(
-    #     0, '--start', '-s', callback=start_callback, help="Start encoding at the nth pixel"),
-    # every_px: Optional[int] = typer.Option(1, '--every-px', '-p', callback=every_px_callback, show_default=False),
 ):
     """
     Encode a message into a copy of an image.
@@ -87,10 +88,10 @@ def img_encode(
 
     with Image.open(in_image_path) as out_image:
         key = encode(out_image, msg)
-        # out_image.show()
 
         # Currently only supporting PNG for output file of encoding
-        out_image.save(out_image_path, format='png')
+        out_path_png = out_image_path.with_suffix('.png')
+        out_image.save(out_path_png, format='png')
 
         typer.secho("Done encoding", fg=typer.colors.GREEN, bold=True)
         typer.secho(f"decode key: {key}", fg=typer.colors.CYAN, bold=False)
