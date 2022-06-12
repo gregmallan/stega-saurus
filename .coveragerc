@@ -1,5 +1,6 @@
 [run]
 branch = True
+source = src/
 omit =
     conftest.py
     tests/*
