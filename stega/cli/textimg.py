@@ -9,16 +9,21 @@ from stega.image.text import encode, decode
 app = typer.Typer()
 
 
-def start_callback(value: int):
+def start_callback(value: int) -> int:
     if value < 0:
         raise typer.BadParameter("Must be greater than 0")
     return value
 
 
-def every_px_callback(value: int):
+def every_px_callback(value: int) -> int:
     if value < 1:
         raise typer.BadParameter("Must be greater than 1")
     return value
+
+
+def msg_callback(value: str) -> str:
+    if not value:
+        raise typer.BadParameter("Message must not be empty")
 
 
 @app.callback(help='Stega-saurus text image steganography')
@@ -47,7 +52,7 @@ def img_encode(
         resolve_path=True,
         help="Output image path to encode the message into (file extension ignored, image will be a png)"
     ),
-    msg: str = typer.Argument(..., help="Message to encode in to the image"),
+    msg: str = typer.Argument(..., callback=msg_callback, help="Message to encode in to the image"),
 ):
     """
     Encode a message into a copy of an image.
