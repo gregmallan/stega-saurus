@@ -24,6 +24,13 @@ def every_px_callback(value: int) -> int:
 def msg_callback(value: str) -> str:
     if not value:
         raise typer.BadParameter("Message must not be empty")
+    return value
+
+
+def key_callback(value: str) -> str:
+    if not value:
+        raise typer.BadParameter("Key must not be empty")
+    return value
 
 
 @app.callback(help='Stega-saurus text image steganography')
@@ -78,7 +85,7 @@ def img_encode(
         out_image.save(out_path_png, format='png')
 
         typer.secho("Done encoding", fg=typer.colors.GREEN, bold=True)
-        typer.secho(f"decode key: {key}", fg=typer.colors.CYAN, bold=False)
+        typer.secho(f"Decode key: {key}", fg=typer.colors.CYAN, bold=False)
 
 
 @app.command(name='decode', help="Decode a message from an image")
@@ -91,7 +98,7 @@ def img_decode(
         readable=True,
         resolve_path=True,
         help="Image path with encoded msg"),
-    key: str = typer.Argument(..., help="Image path with encoded msg"),
+    key: str = typer.Argument(..., callback=key_callback, help="Image path with encoded msg"),
 ):
     """
     Decode a message from an image.
