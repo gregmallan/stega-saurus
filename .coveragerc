@@ -1,5 +1,6 @@
 [run]
 branch = True
+source = stega/
 omit =
     conftest.py
     tests/*

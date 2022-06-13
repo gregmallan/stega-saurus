@@ -2,7 +2,7 @@ import pytest
 
 from PIL import Image
 
-from src.image.text import encode, decode
+from stega.image.text import encode, decode
 
 IMAGE_WIDTH = 2992
 IMAGE_MAX_X = IMAGE_WIDTH - 1
