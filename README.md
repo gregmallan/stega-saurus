@@ -75,7 +75,7 @@ Encode a message in an image, outputting the result as a png
 python -m stega textimg encode ~/Desktop/inimg.jpg ~/Desktop/outimg.png "Your secret message goes here"
 ```
 
-This command will produce output that contains a key that will need to be used to decode the message from the key
+This command will produce output that contains a key that will need to be used to decode the message from the png image
 
 ```
 stega-saurus text image steganography encode
