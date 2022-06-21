@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="stega-saurus",
-    version="0.0.1a0",
+    version="0.0.1a1",
     author="Greg Allan",
     author_email="gregallandev@gmail.com",
     description="A steganography package",
@@ -20,6 +20,9 @@ setuptools.setup(
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Natural Language :: English",
         "Operating System :: MacOS :: MacOS X",
+        "Python",
+        "Python :: 3",
+        "Python :: 3 :: Only",
         "Programming Language :: Python :: 3.7",
     ],
     package_dir={"": "stega"},
