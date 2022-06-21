@@ -1,4 +1,4 @@
-from stega import cli, __app_name__
+from stega import __app_name__
 from stega.cli import command
 
 
