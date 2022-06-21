@@ -29,7 +29,7 @@ setuptools.setup(
     packages=setuptools.find_packages(where="stega"),
     python_requires=">=3.7.2",
     install_requires=[
-        "Pillow>=8.4.0,<8.5",
+        "Pillow>=9.1.1,<9.2",
         "typer>=0.4.1,<0.5",
     ],
     extras_require={
