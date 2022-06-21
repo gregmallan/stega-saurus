@@ -8,7 +8,7 @@ setuptools.setup(
     version="0.0.1a1",
     author="Greg Allan",
     author_email="gregallandev@gmail.com",
-    description="A steganography package",
+    description="A steganography CLI",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/gregmallan/stega-saurus",
