@@ -2,14 +2,13 @@
 A CLI to perform steganography
 
 
+## Installation
+
+```
+pip install stega-saurus-py
+```
 
 ## Usage
-
-Install stega-saurus
-
-```
-pip install stega-saurus
-```
 
 ### Command help
 
