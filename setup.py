@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="stega-saurus-py",
-    version="0.0.1a4",
+    version="0.0.1a5",
     author="Greg Allan",
     author_email="gregallandev@gmail.com",
     description="A steganography CLI",
@@ -29,8 +29,8 @@ setuptools.setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
     ],
-    package_dir={"": "stega"},
-    packages=setuptools.find_packages(where="stega"),
+    package_dir={"": "src"},
+    packages=setuptools.find_packages(where="src"),
     python_requires=">=3.7.2",
     install_requires=[
         "Pillow>=9.1.1,<9.2",
