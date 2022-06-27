@@ -9,10 +9,8 @@ IMAGE_MAX_X = IMAGE_WIDTH - 1
 
 
 @pytest.fixture(params=[
-    'Uncle Leo',
-    '  Hello Jerry ',
-    'Hello Jerry! ',
-    'Ahh! The Lopper!',
+    'Hello Jerry!',
+    '  Ahh! The Lopper!  ',
     "And if you don't love me now\nYou will never love me again\nI can still hear you saying\nYou would never break the chain (Never break the chain)",
     "Test ûñįçœdë characters",
 ])
@@ -60,7 +58,7 @@ def test_encode_decode(original_image, original_msg, start, every_px):
 
 
 @pytest.mark.parametrize('start', [
-    0, 1, 2, 3, 101, IMAGE_MAX_X - 1, IMAGE_MAX_X, IMAGE_MAX_X + 1,
+    0, 1, 2, 3, IMAGE_MAX_X - 1, IMAGE_MAX_X, IMAGE_MAX_X + 1,
 ])
 @pytest.mark.parametrize('every_px', [1, 2, 3, 4, 1001])
 def test_encode_decode_img_file(original_image, original_msg_reduced_set, start, every_px, tmp_path):
