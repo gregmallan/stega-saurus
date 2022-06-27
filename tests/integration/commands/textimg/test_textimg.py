@@ -2,7 +2,6 @@ from pathlib import Path
 
 import pytest
 
-from stega import __app_name__, __version__
 from stega.cli.command import app
 
 COMMAND = 'textimg'
